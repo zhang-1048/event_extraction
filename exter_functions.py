@@ -161,10 +161,10 @@ def cosine_similarity(x, y, norm=False):
 
 def match_keyword_cls(strage, enterprise, operators, filter_first):
     """
-    strage:List,表示政策监管类的关键词,
-    enterprise:List,表示政策监管类的关键词,
-    operators:List,表示政策监管类的关键词,
-    return：List，分类后的事件类别
+    strage:List,
+    enterprise:List,
+    operators:List,
+    return：List，
     """
     strage_list = []
     enterprise_list = []
@@ -198,7 +198,7 @@ def match_keyword_cls(strage, enterprise, operators, filter_first):
                 other_list.append((k, i))
 
     zonghe_list = [strage_list, operators_list, enterprise_list, other_list]
-    name_zonghe_list = ["政策类", "运营商动态类", "企业动态类", "行业资讯类"]
+    name_zonghe_list = ["lei1", "lei2", "lei3", "lei4"]
 
     return zonghe_list, name_zonghe_list
 
@@ -282,8 +282,7 @@ def event_cluster_function(zonghe_list,
     res_file_name:保存文件名
     words_length_limit:字数显示限制
     """
-    some = "总事件数*内部事件序号*事件句数量*F or Re*事件句*总相似度*来源地址*与标题的相似度" \
-           "*标题*发布时间*正文*id*关键词*源网站".split("*")
+    some = "标题信息".split("*")
     outwb = openpyxl.Workbook()  # 打开一个将写的文件
     outws = outwb.create_sheet(index=0)  # 在将写的文件创建sheet
     quanju_hang = 1  # 注意：'cell'函数中行列起始值为1
@@ -295,7 +294,6 @@ def event_cluster_function(zonghe_list,
     for index in range(len(zonghe_list)):
         dict_name = name_zonghe_list[index]
 
-        # if dict_name not in ["运营商动态类"]: continue
         print(dict_name)
         tmp_list_tuple = zonghe_list[index]  # 这里不能转为dict，否则同一链接下的语句会被覆盖
 
@@ -327,8 +325,8 @@ def event_cluster_function(zonghe_list,
         final_index = 0
         final_dict = {}
         for k1, v1 in res1_dict.items():
-            if dict_name in ["政策类", "运营商动态类"] or len(v1) >= min_show_num:  # 对 政策类，或是出现次数大于min_show_num的，才进行展示
-                if dict_name != "政策类":  # 对于非政策类，进行字数限制，过滤句子太长的结果
+            if dict_name in ["lei1", "lei2"] or len(v1) >= min_show_num:  # 对 lei1，或是出现次数大于min_show_num的，才进行展示
+                if dict_name != "lei2":  # 进行字数限制，过滤句子太长的结果
                     v1 = [i for i in v1 if len(dict_event_index_event[i]) <= words_length_limit]
                 if len(v1) == 0: continue
                 # 计算标题相似度
@@ -360,7 +358,7 @@ def event_cluster_function(zonghe_list,
 
         inner_count = 1
         for even_index, sentences in final_dict_sorted.items():
-            if dict_name not in ["政策类", "运营商动态类"] and len(sentences) < min_show_num:
+            if dict_name not in ["lei1", "lei2"] and len(sentences) < min_show_num:
                 continue
             t_v, t_add_simi, t_all_link_simi_with_title, t_all_link_simi_with_abst = zip(*sentences)
             F_and_R = ["F"] + ["Re"] * (len(sentences) - 1)
