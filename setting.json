@@ -1,0 +1,7 @@
+{
+    "title_allowed":true,
+    "min_show_num":2,
+    "max_show_num":10,
+    "words_length_limit":40,
+    "remove_duplicated_link":true
+}
